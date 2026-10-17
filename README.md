@@ -1,5 +1,7 @@
 # Heart Disease MLOps — End-to-End (Assignment 1)
 
+[![MLOps CI](https://github.com/gangadharrr/MLOPS-Assignment-1/actions/workflows/ci.yml/badge.svg)](https://github.com/gangadharrr/MLOPS-Assignment-1/actions/workflows/ci.yml)
+
 Predict heart-disease risk + serve as monitored API with full MLOps: EDA → training (MLflow) → tests → CI → Docker → K8s → Prometheus monitoring.
 
 ## Quickstart (clean setup)

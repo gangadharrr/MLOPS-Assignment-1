@@ -1,0 +1,24 @@
+CI verification — GitHub Actions (repo: gangadharrr/MLOPS-Assignment-1)
+Date: 2026-10-17
+============================================================
+Workflow: ".github/workflows/ci.yml" ("MLOps CI"), triggers on push/PR,
+job "lint-test-train" on ubuntu-latest with Python 3.10.
+
+Run #1 — commit ee06963 ("MLOps Assignment 1: heart disease risk pipeline end-to-end")
+  https://github.com/gangadharrr/MLOPS-Assignment-1/actions/runs/39029553784
+  Conclusion: SUCCESS — every step green:
+    - Install deps
+    - Lint (flake8 src app tests)
+    - Train (uses committed data/heart.csv)
+    - Unit tests (model exists, so predict tests cannot be skipped)
+    - Build serving image (docker build -t heart-api:ci .)
+    - Container smoke test (/ready poll + POST /predict)
+    - Upload model and metrics (artifact "model-and-metrics")
+
+Run #2 — commit 5b0a28d ("Add GitHub repository URL to report", 4 commits total)
+  https://github.com/gangadharrr/MLOPS-Assignment-1/actions/runs/39030151715
+  Conclusion: SUCCESS — same steps all green.
+
+Reading: lint errors, failing tests, a broken Docker build, or an unresponsive
+container fail the workflow with clear logs (no continue-on-error anywhere).
+Trained model + metrics are uploaded as a run artifact on every run.

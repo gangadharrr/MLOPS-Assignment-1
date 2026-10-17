@@ -211,7 +211,10 @@ push / PR → checkout → Python 3.10 (pip cache) → pip install -r requiremen
 Every step is fail-fast: a lint error, failing test, broken Docker build or unresponsive container
 fails the whole workflow with clear logs, satisfying the "pipeline fails on code/test errors" 
 requirement. The model is trained inside CI and uploaded as an artifact per run, so each build's
-outputs are traceable. The workflow file is in the repo; the first push triggers it on GitHub.
+outputs are traceable. **Verified on GitHub Actions:** runs #1 (`ee06963`) and #2 (`5b0a28d`) both
+completed with all steps green (lint → train → tests → image build → container smoke test →
+artifact upload); step-level evidence in `screenshots/ci_verification.txt`, live status on the
+repo's Actions tab.
 
 ---
 
@@ -421,6 +424,8 @@ error body. Response example: `{"prediction":0,"probability":0.3572,"label":"no_
 
 | File | Shows |
 |---|---|
+| `ci_verification.txt` | GitHub Actions runs #1–#2: all steps green |
+| `clean_setup_verification.txt` | fresh venv → flake8 → train (same metrics) → 20 tests pass |
 | `local_api_verification.txt` | uvicorn run, endpoints, expected prediction |
 | `docker_verification.txt` | image size, container endpoints, 422 check, metrics, logs |
 | `api_docs.png` | OpenAPI/Swagger page |
