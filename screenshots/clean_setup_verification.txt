@@ -1,0 +1,26 @@
+Clean-setup verification — full CI chain replayed locally
+Date: 2026-10-17
+============================================================
+Environment: fresh `python3.10 -m venv` (Python 3.10, matching the CI
+`actions/setup-python` version), dependencies installed ONLY from
+requirements.txt:
+
+$ python3.10 -m venv ci-venv && ci-venv/bin/pip install -r requirements.txt
+  → clean install (no manual steps)
+
+$ ci-venv/bin/flake8 src app tests
+  → OK (no findings)
+
+$ ci-venv/bin/python src/train.py --data data/heart.csv --out <tmp>/ci-models
+  == random_forest ==
+  best params: {'clf__max_depth': 5, 'clf__min_samples_leaf': 3, 'clf__n_estimators': 100}
+  {'cv_mean_roc_auc': 0.8954, 'test_accuracy': 0.8689, 'test_precision': 0.8333,
+   'test_recall': 0.8929, 'test_roc_auc': 0.9481}
+  Best model: random_forest (nested-CV ROC-AUC=0.8954, test ROC-AUC=0.9481)
+  → identical to the committed models/metrics_summary.csv (reproducible)
+
+$ CI=1 ci-venv/bin/python -m pytest -q
+  → 20 passed in 10.19s
+
+Remaining CI steps (docker build + container smoke test) were verified
+separately in screenshots/docker_verification.txt.
