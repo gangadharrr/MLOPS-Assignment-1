@@ -2,7 +2,7 @@
 
 **Course:** Machine Learning Operations (AIMLCZG523) · **Assignment 01** · **Marks:** 50
 **Author:** Gangadhar C · **Date:** October 2026
-**Repository:** _(GitHub URL added after push)_
+**Repository:** https://github.com/gangadharrr/MLOPS-Assignment-1
 **Evidence:** `reports/`, `screenshots/`, `models/`, MLflow experiment `heart-disease`
 
 ---
