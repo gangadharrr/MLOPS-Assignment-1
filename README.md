@@ -14,7 +14,7 @@ uvicorn app.main:app --port 8000
 # in another terminal:
 curl http://localhost:8000/health
 curl -X POST http://localhost:8000/predict -H "Content-Type: application/json" -d @sample_request.json
-mlflow ui  # view experiment "heart-disease"
+mlflow ui  # view experiment "heart-disease" (default port 5000; on macOS use --port 5001 if AirPlay Receiver holds 5000)
 ```
 
 ## Docker
@@ -44,7 +44,10 @@ docker build -t heart-api:latest .
 # minikube: minikube image load heart-api:latest
 kubectl apply -f k8s/
 kubectl get pods,svc
-curl http://<EXTERNAL-IP>/health
+# LoadBalancer EXTERNAL-IP stays <pending> on minikube until `minikube tunnel`;
+# verify access through the same Service with:
+kubectl port-forward svc/heart-api 8001:80 &
+curl http://localhost:8001/health
 ```
 
 Manifests: `k8s/deployment.yaml` (2 replicas, probes, resources), `k8s/service.yaml` (LoadBalancer 80→8000).
