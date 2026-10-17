@@ -1,0 +1,37 @@
+# Local monitoring stack:  docker compose up --build
+#   API        http://localhost:8000   (/predict, /ready, /metrics)
+#   Prometheus http://localhost:9090
+#   Grafana    http://localhost:3001   (admin / admin; dashboard "Heart API" is pre-provisioned)
+# (Grafana is on host port 3001: port 3000 is commonly taken by other local dev servers.)
+services:
+  heart-api:
+    build: .
+    image: heart-api:latest
+    ports: ["8000:8000"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request as u; u.urlopen('http://localhost:8000/ready')"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  prometheus:
+    build:
+      context: ./monitoring
+      dockerfile: prometheus.Dockerfile
+    image: heart-prometheus:latest
+    ports: ["9090:9090"]
+    depends_on: [heart-api]
+
+  grafana:
+    build:
+      context: ./monitoring
+      dockerfile: grafana.Dockerfile
+    image: heart-grafana:latest
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      # dashboard viewable without login (localhost demo); editing still needs admin/admin
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+    ports: ["3001:3000"]
+    depends_on: [prometheus]

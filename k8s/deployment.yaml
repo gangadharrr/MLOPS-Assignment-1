@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: heart-api
+  labels: {app: heart-api}
+spec:
+  replicas: 2
+  selector:
+    matchLabels: {app: heart-api}
+  template:
+    metadata:
+      labels: {app: heart-api}
+    spec:
+      containers:
+        - name: api
+          image: heart-api:latest
+          imagePullPolicy: IfNotPresent
+          ports: [{containerPort: 8000}]
+          readinessProbe:
+            httpGet: {path: /ready, port: 8000}
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: {path: /health, port: 8000}
+            periodSeconds: 20
+          resources:
+            requests: {cpu: 100m, memory: 256Mi}
+            limits: {cpu: 500m, memory: 1Gi}

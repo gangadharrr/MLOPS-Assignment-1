@@ -1,0 +1,35 @@
+Monitoring verification — docker compose stack (API + Prometheus + Grafana)
+Date: 2026-10-17 16:59:52
+===============================================
+
+$ docker compose ps
+NAME                              STATUS                   PORTS
+mlops-assignment-1-grafana-1      Up 59 seconds            0.0.0.0:3001->3000/tcp, [::]:3001->3000/tcp
+mlops-assignment-1-heart-api-1    Up 3 minutes (healthy)   0.0.0.0:8000->8000/tcp, [::]:8000->8000/tcp
+mlops-assignment-1-prometheus-1   Up 3 minutes             0.0.0.0:9090->9090/tcp, [::]:9090->9090/tcp
+
+$ curl -s http://localhost:9090/api/v1/targets  (summary)
+job=heart-api  url=http://heart-api:8000/metrics  health=up
+
+$ Prometheus query: total requests by endpoint | value
+/docs        1
+/health      7
+/openapi.json 1
+/predict     70
+/ready       19
+/v1/models   7
+
+$ Prometheus query: predictions by label
+no_disease   65
+
+$ curl -s http://localhost:3001/api/health
+{
+  "commit": "5b85c4c2fcf5d32d4f68aaef345c53096359b2f1",
+  "database": "ok",
+  "version": "11.1.0"
+}
+$ Grafana datasources (admin)
+Prometheus  prometheus  http://prometheus:9090  default=True
+
+$ Grafana provisioned dashboards (no login required for viewing)
+Heart API  ->  http://localhost:3001/d/heart-api/heart-api

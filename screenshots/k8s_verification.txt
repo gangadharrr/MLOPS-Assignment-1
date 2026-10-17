@@ -1,0 +1,46 @@
+K8s verification — heart-api on minikube (Docker driver)
+Date: 2026-10-17 17:03:08
+===============================================
+
+$ minikube status
+minikube
+type: Control Plane
+host: Running
+kubelet: Running
+apiserver: Running
+kubeconfig: Configured
+
+
+$ kubectl get nodes
+NAME       STATUS   ROLES           AGE   VERSION
+minikube   Ready    control-plane   72d   v1.35.1
+
+$ kubectl get pods,svc -o wide
+NAME                             READY   STATUS    RESTARTS   AGE   IP              NODE       NOMINATED NODE   READINESS GATES
+pod/heart-api-77865497f4-jcfv6   1/1     Running   0          15s   10.244.120.68   minikube   <none>           <none>
+pod/heart-api-77865497f4-lczcf   1/1     Running   0          15s   10.244.120.67   minikube   <none>           <none>
+
+NAME                 TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE   SELECTOR
+service/heart-api    LoadBalancer   10.111.181.77   <pending>     80:32766/TCP   15s   app=heart-api
+service/kubernetes   ClusterIP      10.96.0.1       <none>        443/TCP        72d   <none>
+
+(LoadBalancer EXTERNAL-IP stays <pending> on minikube without `minikube tunnel`;
+ service verified below via port-forward, which fronts the same Service.)
+
+$ kubectl port-forward svc/heart-api 8001:80 &
+
+$ curl -s http://localhost:8001/health
+{"status":"ok"}
+
+$ curl -s http://localhost:8001/ready
+{"status":"ready"}
+
+$ curl -s -X POST http://localhost:8001/predict -H "Content-Type: application/json" -d @sample_request.json
+{"prediction":0,"probability":0.3572,"label":"no_disease"}
+
+$ kubectl logs deployment/heart-api --tail=5  (one pod of the two)
+INFO:     127.0.0.1:55444 - "GET /ready HTTP/1.1" 200 OK
+2026-10-17 11:33:12,998 INFO GET /ready -> 200 0.000s
+2026-10-17 11:33:13,045 INFO prediction=no_disease probability=0.3572
+2026-10-17 11:33:13,045 INFO POST /predict -> 200 0.019s
+INFO:     127.0.0.1:55448 - "POST /predict HTTP/1.1" 200 OK

@@ -1,0 +1,9 @@
+[flake8]
+max-line-length = 120
+exclude = .venv,venv,mlruns,__pycache__
+# E402 is intentional here: matplotlib.use("Agg") must precede pyplot, and sys.path
+# is adjusted before local imports.
+per-file-ignores =
+    src/eda.py:E402
+    src/train.py:E402
+    tests/test_data_processing.py:E402

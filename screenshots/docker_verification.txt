@@ -1,0 +1,36 @@
+Docker verification — heart-api:latest
+Date: 2026-10-17 16:54:42
+===============================================
+
+$ docker images heart-api --format "table {{.Repository}}:{{.Tag}}	{{.ID}}	{{.Size}}"
+REPOSITORY:TAG     IMAGE ID       SIZE
+heart-api:latest   986cc56b7f02   653MB
+
+$ docker ps --filter name=heart-api
+NAMES       STATUS          PORTS
+heart-api   Up 22 seconds   0.0.0.0:8000->8000/tcp, [::]:8000->8000/tcp
+
+$ curl -s http://localhost:8000/health
+{"status":"ok"}
+
+$ curl -s http://localhost:8000/ready
+{"status":"ready"}
+
+$ curl -s -X POST http://localhost:8000/predict -H "Content-Type: application/json" -d @sample_request.json
+{"prediction":0,"probability":0.3572,"label":"no_disease"}
+
+$ curl -si -X POST http://localhost:8000/predict -H "Content-Type: application/json" -d "{\"age\":63,...,\"cp\":9,...}" (cp=9 is out of range 1-4)
+HTTP/1.1 422 Unprocessable Entity
+
+$ curl -s http://localhost:8000/metrics | grep -E "^api_predictions_total"
+api_predictions_total{label="no_disease"} 3.0
+
+$ docker logs heart-api (tail)
+INFO:     192.168.65.1:21351 - "GET /ready HTTP/1.1" 200 OK
+2026-10-17 11:24:42,813 INFO prediction=no_disease probability=0.3572
+2026-10-17 11:24:42,813 INFO POST /predict -> 200 0.015s
+INFO:     192.168.65.1:51798 - "POST /predict HTTP/1.1" 200 OK
+2026-10-17 11:24:42,835 INFO POST /predict -> 422 0.001s
+INFO:     192.168.65.1:45147 - "POST /predict HTTP/1.1" 422 Unprocessable Entity
+2026-10-17 11:24:42,848 INFO GET /metrics -> 200 0.001s
+INFO:     192.168.65.1:41701 - "GET /metrics HTTP/1.1" 200 OK

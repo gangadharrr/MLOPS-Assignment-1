@@ -1,0 +1,16 @@
+# Heart Disease MLOps — End-to-End Pipeline (pinned to verified working set)
+fastapi==0.121.3
+uvicorn==0.38.0
+scikit-learn==1.6.1
+pandas==2.3.3
+numpy==2.0.2
+matplotlib==3.9.4
+seaborn==0.13.2
+mlflow==3.1.4
+joblib==1.5.3
+pydantic==2.12.4
+pytest==8.2.0
+httpx==0.28.1
+prometheus-client==0.26.0
+scipy==1.13.1
+flake8==7.1.1

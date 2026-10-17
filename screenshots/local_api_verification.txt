@@ -1,0 +1,26 @@
+# Local uvicorn run (NOT Docker) - Sun Oct 11 10:23:49 IST 2026
+# model: random_forest
+READY:   {"status":"ready"}
+HEALTH:  {"status":"ok"}
+PREDICT: {"prediction":0,"probability":0.3572,"label":"no_disease"}
+BAD thal=1 -> HTTP 422
+--- metrics ---
+api_requests_total{endpoint="/ready",status="200"} 2.0
+api_requests_total{endpoint="/health",status="200"} 1.0
+api_requests_total{endpoint="/predict",status="200"} 1.0
+api_requests_total{endpoint="/predict",status="422"} 1.0
+api_latency_seconds_count{endpoint="/ready"} 2.0
+api_latency_seconds_sum{endpoint="/ready"} 0.0007998340000003878
+api_latency_seconds_count{endpoint="/health"} 1.0
+api_latency_seconds_sum{endpoint="/health"} 0.00035458400000010215
+api_latency_seconds_count{endpoint="/predict"} 2.0
+api_latency_seconds_sum{endpoint="/predict"} 0.01326654199999977
+api_predictions_total{label="no_disease"} 1.0
+--- server log ---
+2026-10-11 10:23:49,248 INFO GET /ready -> 200 0.000s
+2026-10-11 10:23:49,343 INFO GET /ready -> 200 0.000s
+2026-10-11 10:23:49,361 INFO GET /health -> 200 0.000s
+2026-10-11 10:23:49,392 INFO prediction=no_disease probability=0.3572
+2026-10-11 10:23:49,392 INFO POST /predict -> 200 0.013s
+2026-10-11 10:23:49,411 INFO POST /predict -> 422 0.001s
+2026-10-11 10:23:49,429 INFO GET /metrics -> 200 0.001s

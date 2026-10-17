@@ -1,0 +1,17 @@
+.git
+.github
+.venv
+mlruns
+reports
+screenshots
+notebooks
+tests
+data
+src
+monitoring
+k8s
+__pycache__
+*.pyc
+.pytest_cache
+models/*
+!models/model.pkl
