@@ -4,6 +4,8 @@
 
 Predict heart-disease risk + serve as monitored API with full MLOps: EDA → training (MLflow) → tests → CI → Docker → K8s → Prometheus monitoring.
 
+**Video walkthrough:** [`reports/pipeline_walkthrough.mp4`](reports/pipeline_walkthrough.mp4) (~3 min, captioned) — repo tour → data & EDA → tracked training + tests → Docker → Kubernetes → Prometheus/Grafana.
+
 ## Quickstart (clean setup)
 
 ```bash

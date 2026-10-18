@@ -443,3 +443,8 @@ error body. Response example: `{"prediction":0,"probability":0.3572,"label":"no_
 4. **Serving** (60 s): `docker build` → `docker run` → `curl /predict` (show 422 example too).
 5. **Cluster + monitoring** (75 s): `kubectl get pods,svc` (2/2 running) → curl through
    port-forward → Grafana dashboard with fresh traffic.
+
+The recorded walkthrough is included in this repository at
+[`reports/pipeline_walkthrough.mp4`](pipeline_walkthrough.mp4) (1920×1080, ~3:20, captioned).
+Every terminal segment is a live execution of the commands listed above, followed by live
+captures of MLflow, the Grafana dashboard and Prometheus targets.
